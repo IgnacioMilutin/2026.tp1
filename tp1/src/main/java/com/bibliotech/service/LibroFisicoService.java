@@ -1,9 +1,7 @@
 package com.bibliotech.service;
 
+import com.bibliotech.exception.StockNegativoException;
 import com.bibliotech.model.LibroFisico;
-import com.bibliotech.model.Recurso;
-
-import java.util.List;
 
 public class LibroFisicoService{
 
@@ -13,11 +11,11 @@ public class LibroFisicoService{
     }
 
     //Logica para disminuir el stock de un objeto LibroFisico
-    public void decrementoStock(LibroFisico libro , int cantidad){
+    public void decrementoStock(LibroFisico libro , int cantidad) throws StockNegativoException {
 
         //Excepcion si el stock baja a menos de cero
         if (libro.getStock() < cantidad){
-            throw new StockNegativoException();
+            throw new StockNegativoException(libro.getStock(),cantidad);
         }
 
         libro.decrementarStock(cantidad);

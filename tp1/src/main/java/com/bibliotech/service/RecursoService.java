@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.exception.RecursoNoEncontradoException;
 import com.bibliotech.model.Recurso;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class RecursoService {
     }
 
     //Metodo de busqueda de recursos por titulo, luego autor y luego categoria
-    public List<Recurso> buscarRecursos(String busqueda) throws RecursoNoEncontradoException{
+    public List<Recurso> buscarRecursos(String busqueda) throws RecursoNoEncontradoException {
         String busquedaLower=busqueda.toLowerCase();
 
         //filtro
