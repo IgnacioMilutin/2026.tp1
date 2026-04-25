@@ -45,4 +45,14 @@ public class LibroFisico implements Recurso{
         return this.stock > 0;
     }
 
+    //Metodo incrementar el atributo stock
+    public void incrementarStock(int cantidad) {
+        this.stock += cantidad;
+    }
+
+    //Metodo decrementar el atributo stock
+    public void decrementarStock(int cantidad) {
+        this.stock -= cantidad;
+    }
+
 }
