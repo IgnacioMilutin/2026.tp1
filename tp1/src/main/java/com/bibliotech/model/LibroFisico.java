@@ -45,6 +45,18 @@ public class LibroFisico implements Recurso{
         return this.stock > 0;
     }
 
+    //toString
+    @Override
+    public String toString() {
+        return "LibroFisico{" +
+                "isbn='" + isbn + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", autor='" + autor + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", stock=" + stock +
+                '}';
+    }
+
     //Metodo incrementar el atributo stock
     public void incrementarStock(int cantidad) {
         this.stock += cantidad;
