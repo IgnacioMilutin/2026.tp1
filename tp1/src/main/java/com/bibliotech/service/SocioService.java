@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.exception.EmailInvalidoException;
 import com.bibliotech.exception.TipoSocioInexistenteException;
+import com.bibliotech.exception.DniDuplicadoException;
 import com.bibliotech.model.Docente;
 import com.bibliotech.model.Estudiante;
 import com.bibliotech.model.Socio;
@@ -23,6 +24,11 @@ public class SocioService {
         int id = contadorId;
 
         String tipoLower = tipo.toLowerCase();
+
+        //validacion dni unico
+        if (socios.stream().anyMatch(socio -> socio.dni().equals(dni))){
+            throw new DniDuplicadoException(dni);
+        }
 
         //validacion email
         if (!email.matches("([a-zA-Z0-9._%-]+)@([a-zA-Z0-9.-]+)\\.([a-zA-Z]{2,6})")) {
