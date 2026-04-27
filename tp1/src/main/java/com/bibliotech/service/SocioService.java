@@ -19,7 +19,7 @@ public class SocioService {
     }
 
     //metodo para crear socio con validaciones
-    public void nuevoSocio(String tipo,String dni,String nombre, String email) throws TipoSocioInexistenteException, EmailInvalidoException {
+    public void nuevoSocio(String tipo,String dni,String nombre, String email) throws TipoSocioInexistenteException, EmailInvalidoException, DniDuplicadoException {
 
         int id = contadorId;
 
