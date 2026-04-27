@@ -1,5 +1,9 @@
 package com.bibliotech.service;
 
+import com.bibliotech.exception.EmailInvalidoException;
+import com.bibliotech.exception.TipoSocioInexistenteException;
+import com.bibliotech.model.Docente;
+import com.bibliotech.model.Estudiante;
 import com.bibliotech.model.Socio;
 
 import java.util.List;
@@ -14,7 +18,7 @@ public class SocioService {
     }
 
     //metodo para crear socio con validaciones
-    public void nuevoSocio(String tipo,String dni,String nombre, String email){
+    public void nuevoSocio(String tipo,String dni,String nombre, String email) throws TipoSocioInexistenteException, EmailInvalidoException {
 
         int id = contadorId;
 
