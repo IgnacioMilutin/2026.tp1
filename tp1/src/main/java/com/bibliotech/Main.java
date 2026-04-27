@@ -4,8 +4,10 @@ import com.bibliotech.exception.BibliotechException;
 import com.bibliotech.model.Ebook;
 import com.bibliotech.model.LibroFisico;
 import com.bibliotech.model.Recurso;
+import com.bibliotech.model.Socio;
 import com.bibliotech.service.LibroFisicoService;
 import com.bibliotech.service.RecursoService;
+import com.bibliotech.service.SocioService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +38,9 @@ public class Main {public static void main(String[] args) {
 
     System.out.println("VERIFICACION DE FUNCIONES DE LIBROS");
     System.out.println("\n");
-    System.out.println("\n");
 
     //Verificar disponibilidad de libro fisico con stock
-    System.out.println("VERIFICAR DISPONIBILIDAD DE LIBRO FISICO CON STOCK");
+    System.out.println("VERIFICAR DISPONIBILIDAD DE LIBRO FISICO CON STOCK:");
     System.out.println("Disponibilidad libro1: "+libro1.disponibilidad());
     System.out.println("\n");
 
@@ -90,14 +91,14 @@ public class Main {public static void main(String[] args) {
     System.out.println("\n");
 
     //Incrementar stock de un libro fisico
-    System.out.println("INCREMENTAR STOCK DE LIBRO FISICO");
+    System.out.println("INCREMENTAR STOCK DE LIBRO FISICO:");
     System.out.println("Stock libro1 antes: "+libro1.getStock());
     libroFisicoService.incrementoStock(libro1, 1);
     System.out.println("Stock libro1 despues: "+libro1.getStock());
     System.out.println("\n");
 
     //Decrementar stock de un libro fisico
-    System.out.println("DECREMENTAR STOCK DE LIBRO FISICO");
+    System.out.println("DECREMENTAR STOCK DE LIBRO FISICO:");
     System.out.println("Stock libro1 antes: "+libro1.getStock());
     try { libroFisicoService.decrementoStock(libro1,1);
         System.out.println("Stock libro1 despues: "+libro1.getStock());
@@ -107,13 +108,71 @@ public class Main {public static void main(String[] args) {
     System.out.println("\n");
 
     //Intentar decrementar stock de un libro fisico mas del stock disponible
-    System.out.println("DISMINUIR STOCK DE LIBRO FISICO MAS DEL STOCK DISPONIBLE");
+    System.out.println("DISMINUIR STOCK DE LIBRO FISICO MAS DEL STOCK DISPONIBLE:");
     System.out.println("Stock libro3 antes: "+libro3.getStock());
     try { libroFisicoService.decrementoStock(libro3,3);
         System.out.println("Stock libro3 despues: "+libro3.getStock());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
+    System.out.println("\n");
+
+    System.out.println("-------------------------------------------------------------------------");
+    System.out.println("VERIFICACION DE FUNCIONES DE USUARIOS");
+    System.out.println("\n");
+
+    //Crear lista de socios
+    List<Socio> socios = new ArrayList<>();
+
+    //Instanciar el service de socio
+    SocioService socioService = new SocioService(socios);
+
+    //Creacion de usuario tipo estudiante
+    System.out.println("CREAR USUARIO TIPO ESTUDIANTE:");
+    try {socioService.nuevoSocio("Estudiante", "45679874", "Javier Gomez", "javiergomez@gmail.com");
+        System.out.println(socios);
+    } catch (BibliotechException e){
+        System.out.println(e.getMessage());
+    }
+    System.out.println("\n");
+
+    //Creacion de usuarios tipo docente
+    System.out.println("CREAR USUARIO TIPO DOCENTE:");
+    try {socioService.nuevoSocio("docente", "44612458", "Maria Garcia", "mariagarcia@gmail.com");
+        System.out.println(socios);
+    } catch (BibliotechException e){
+        System.out.println(e.getMessage());
+    }
+    System.out.println("\n");
+
+    //Creacion de usuarios con tipo inexistente
+    System.out.println("CREAR USUARIO CON TIPO INVALIDO:");
+    try {socioService.nuevoSocio("hola", "46578953", "Mariano Diaz", "marianodiaz@gmail.com");
+        System.out.println(socios);
+    } catch (BibliotechException e){
+        System.out.println(e.getMessage());
+    }
+    System.out.println(socios);
+    System.out.println("\n");
+
+    //Creacion de usuarios con email invalido
+    System.out.println("CREAR USUARIO CON EMAIL INVALIDO:");
+    try {socioService.nuevoSocio("estudiante", "46578953", "Mariano Diaz", "marianodiazgmailcom");
+        System.out.println(socios);
+    } catch (BibliotechException e){
+        System.out.println(e.getMessage());
+    }
+    System.out.println(socios);
+    System.out.println("\n");
+
+    //Creacion de usuario con dni existente
+    System.out.println("CREAR USUARIO CON DNI EXISTENTE:");
+    try {socioService.nuevoSocio("docente", "44612458", "Maria Garcia", "mariagarcia@gmail.com");
+        System.out.println(socios);
+    } catch (BibliotechException e){
+        System.out.println(e.getMessage());
+    }
+    System.out.println("\n");
 
     }
 }
