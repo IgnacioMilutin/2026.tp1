@@ -172,6 +172,7 @@ public class Main {public static void main(String[] args) {
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
+    System.out.println(socios);
     System.out.println("\n");
 
     }
