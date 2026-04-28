@@ -6,6 +6,7 @@ import com.bibliotech.exception.RecursoNoEncontradoException;
 import com.bibliotech.exception.RecursoSinStockException;
 import com.bibliotech.exception.PrestamoNoEncontradoException;
 import com.bibliotech.exception.PrestamoEntregaAtrasadaException;
+import com.bibliotech.model.LibroFisico;
 import com.bibliotech.model.Prestamo;
 import com.bibliotech.model.Recurso;
 import com.bibliotech.model.Socio;
@@ -68,13 +69,19 @@ public class PrestamoService {
         }
 
         Prestamo prestamo = new Prestamo(id,isbn,idSocio,fechaInicio,fechaFin);
+
+        //reducir stock de libro fisico
+        if (recursoEncontrado.get() instanceof LibroFisico){
+            ((LibroFisico) recursoEncontrado.get()).decrementarStock(1);
+        }
+
         prestamos.add(prestamo);
 
         contadorId+=1;
     }
 
     //metodo para la entrega de un prestamo
-    public void registarEntrega(int idPrestamo) throws PrestamoNoEncontradoException,PrestamoEntregaAtrasadaException {
+    public void registarEntrega(int idPrestamo) throws PrestamoNoEncontradoException, PrestamoEntregaAtrasadaException, RecursoNoEncontradoException {
 
         //encontrar prestamo
         Optional<Prestamo> prestamoEncontrado = prestamos.stream()
@@ -91,6 +98,20 @@ public class PrestamoService {
         //set de fecha devolucion
         prestamoEncontrado.get().setFechaDevolucion();
 
+        //aumentar stock de libro fisico al devolverlo
+        Optional<Recurso> recursoEncontrado = recursos.stream()
+                .filter(recurso -> recurso.isbn().equals(prestamoEncontrado.get().getIsbn()))
+                .findFirst();
+
+        if (recursoEncontrado.isEmpty()) {
+            throw new RecursoNoEncontradoException(prestamoEncontrado.get().getIsbn());
+        }
+
+        if (recursoEncontrado.get() instanceof LibroFisico){
+            ((LibroFisico) recursoEncontrado.get()).incrementarStock(1);
+        }
+
+        //excepcion si hay dias de retraso
         if (prestamoEncontrado.get().getFechaDevolucion().get().isAfter(prestamoEncontrado.get().getFechaFin())){
             throw new PrestamoEntregaAtrasadaException(calcularDiasRetraso(prestamoEncontrado.get().getFechaFin(),prestamoEncontrado.get().getFechaDevolucion().get()));
         }
