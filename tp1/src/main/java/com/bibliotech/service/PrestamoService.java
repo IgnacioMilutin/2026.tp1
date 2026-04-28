@@ -49,7 +49,7 @@ public class PrestamoService {
 
         long prestamosEncontrados = prestamos.stream()
                 .filter(prestamo -> prestamo.getIdSocio() == idSocio)
-                .filter(prestamo -> prestamo.getEstado()== estadoPrestamo.ACTIVO).count();
+                .filter(prestamo -> prestamo.getEstado()== Prestamo.estadoPrestamo.ACTIVO).count();
 
         if (prestamosEncontrados >= socioEncontrado.get().limitePrestamos()){
             throw new LimiteDePrestamosException(socioEncontrado.get().limitePrestamos());

@@ -23,6 +23,10 @@ public class Prestamo {
         this.estado = estadoPrestamo.ACTIVO;
     }
 
+    public enum estadoPrestamo{
+        ACTIVO, ENTREGADO
+    }
+
     //getters
     public int getIdPrestamo() {
         return idPrestamo;
@@ -61,9 +65,9 @@ public class Prestamo {
     public void setFechaDevolucion() {
         this.fechaDevolucion = Optional.of(LocalDate.now());
     }
+
+
 }
 
-enum estadoPrestamo{
-    ACTIVO, ENTREGADO
-}
+
 
