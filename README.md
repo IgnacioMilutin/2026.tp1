@@ -7,9 +7,9 @@
 
 | Campo | Respuesta |
 | :--- | :--- |
-| **Nombre** | |
-| **Apellido** | |
-| **Legajo** | |
+| **Nombre** | Ignacio Miguel|
+| **Apellido** | Milutin Tarin|
+| **Legajo** | 62144 |
 
 > **Fecha de entrega:** 28 de Abril de 2026
 
