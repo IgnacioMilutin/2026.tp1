@@ -9,7 +9,6 @@ import com.bibliotech.exception.PrestamoEntregaAtrasadaException;
 import com.bibliotech.model.Prestamo;
 import com.bibliotech.model.Recurso;
 import com.bibliotech.model.Socio;
-import com.bibliotech.model.estadoPrestamo;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
