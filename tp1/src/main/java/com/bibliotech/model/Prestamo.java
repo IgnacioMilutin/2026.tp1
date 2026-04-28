@@ -66,7 +66,18 @@ public class Prestamo {
         this.fechaDevolucion = Optional.of(LocalDate.now());
     }
 
-
+    @Override
+    public String toString() {
+        return "Prestamo{" +
+                "idPrestamo=" + idPrestamo +
+                ", isbn='" + isbn + '\'' +
+                ", idSocio=" + idSocio +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                ", fechaDevolucion=" + fechaDevolucion +
+                ", estado=" + estado +
+                '}';
+    }
 }
 
 
