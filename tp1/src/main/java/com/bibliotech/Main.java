@@ -186,11 +186,13 @@ public class Main {public static void main(String[] args) {
 
     //Creacion de prestamo
     System.out.println("CREAR PRESTAMO:");
+    System.out.println("Stock libro1 antes: "+libro1.getStock());
     try {prestamoService.nuevoPrestamo("978-84-12345-67-2", 1, LocalDate.of(2026, 4, 29));
         System.out.println(prestamos);
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
+    System.out.println("Stock libro1 despues: "+libro1.getStock());
     System.out.println("\n");
 
     //Creacion de prestamo con socio inexistente
@@ -231,11 +233,13 @@ public class Main {public static void main(String[] args) {
 
     //Registrar una entrega a tiempo
     System.out.println("REGISTAR UNA ENTREGA A TIEMPO:");
-    try {prestamoService.registarEntrega(3);
+    System.out.println("Stock libro1 antes: "+libro1.getStock());
+    try {prestamoService.registarEntrega(1);
         System.out.println(prestamos);
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
+    System.out.println("Stock libro1 despues: "+libro1.getStock());
     System.out.println("\n");
 
 
