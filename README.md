@@ -7,13 +7,13 @@
 
 | Campo | Respuesta |
 | :--- | :--- |
-| **Nombre** | |
-| **Apellido** | |
-| **Legajo** | |
+| **Nombre** | Ignacio Miguel |
+| **Apellido** | Milutin Tarin |
+| **Legajo** | 62144  |
 
 > **Fecha de entrega:** 28 de Abril de 2026
 
----
+--
 
 ### 1. Introducción y Contexto
 La biblioteca de la Universidad ha decidido modernizar su sistema de gestión manual. Como ingenieros en formación, se le ha encomendado el diseño y desarrollo del núcleo (core) del sistema **BiblioTech**.
