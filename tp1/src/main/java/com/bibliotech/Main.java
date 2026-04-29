@@ -2,13 +2,15 @@ package com.bibliotech;
 
 import com.bibliotech.exception.BibliotechException;
 import com.bibliotech.model.*;
+import com.bibliotech.repository.PrestamoRepository;
+import com.bibliotech.repository.RecursoRepository;
+import com.bibliotech.repository.SocioRepository;
 import com.bibliotech.service.LibroFisicoService;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.RecursoService;
 import com.bibliotech.service.SocioService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {public static void main(String[] args) {
@@ -22,17 +24,18 @@ public class Main {public static void main(String[] args) {
     Ebook libro4 = new Ebook("978-3-16-148410-0","El Resplandor","Stephen King","terror",true);
     Ebook libro5 = new Ebook("978-950-49-7243-3","Matar a un ruiseñor","Harper Lee","drama",true);
 
-    //Crear y agregar libros fisicos y ebooks a lista recurso
-    List<Recurso> recursos = new ArrayList<>();
+    //Crear repositorio de recursos y agregar libros fisicos y ebooks a el
+    RecursoRepository recursoRepository = new RecursoRepository();
 
-    recursos.add(libro1);
-    recursos.add(libro2);
-    recursos.add(libro3);
-    recursos.add(libro4);
-    recursos.add(libro5);
+    recursoRepository.guardar(libro1);
+    recursoRepository.guardar(libro2);
+    recursoRepository.guardar(libro3);
+    recursoRepository.guardar(libro4);
+    recursoRepository.guardar(libro5);
 
-    //Crear servicios, luego de crear la lista de recurso
-    RecursoService recursoService = new RecursoService(recursos);
+
+    //Crear servicios
+    RecursoService recursoService = new RecursoService(recursoRepository);
     LibroFisicoService libroFisicoService = new LibroFisicoService();
 
     System.out.println("VERIFICACION DE FUNCIONES DE LIBROS");
@@ -120,16 +123,16 @@ public class Main {public static void main(String[] args) {
     System.out.println("VERIFICACION DE FUNCIONES DE USUARIOS");
     System.out.println("\n");
 
-    //Crear lista de socios
-    List<Socio> socios = new ArrayList<>();
+    //Crear repositorio de socios
+    SocioRepository socioRepository = new SocioRepository();
 
     //Instanciar el service de socio
-    SocioService socioService = new SocioService(socios);
+    SocioService socioService = new SocioService(socioRepository);
 
     //Creacion de usuario tipo estudiante
     System.out.println("CREAR USUARIO TIPO ESTUDIANTE:");
     try {socioService.nuevoSocio("Estudiante", "45679874", "Javier Gomez", "javiergomez@gmail.com");
-        System.out.println(socios);
+        System.out.println(socioRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -138,7 +141,7 @@ public class Main {public static void main(String[] args) {
     //Creacion de usuarios tipo docente
     System.out.println("CREAR USUARIO TIPO DOCENTE:");
     try {socioService.nuevoSocio("docente", "44612458", "Maria Garcia", "mariagarcia@gmail.com");
-        System.out.println(socios);
+        System.out.println(socioRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -147,48 +150,48 @@ public class Main {public static void main(String[] args) {
     //Creacion de usuarios con tipo inexistente
     System.out.println("CREAR USUARIO CON TIPO INVALIDO:");
     try {socioService.nuevoSocio("hola", "46578953", "Mariano Diaz", "marianodiaz@gmail.com");
-        System.out.println(socios);
+        System.out.println(socioRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(socios);
+    System.out.println(socioRepository.buscarTodos());
     System.out.println("\n");
 
     //Creacion de usuarios con email invalido
     System.out.println("CREAR USUARIO CON EMAIL INVALIDO:");
     try {socioService.nuevoSocio("estudiante", "46578953", "Mariano Diaz", "marianodiazgmailcom");
-        System.out.println(socios);
+        System.out.println(socioRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(socios);
+    System.out.println(socioRepository.buscarTodos());
     System.out.println("\n");
 
     //Creacion de usuario con dni existente
     System.out.println("CREAR USUARIO CON DNI EXISTENTE:");
     try {socioService.nuevoSocio("docente", "44612458", "Maria Garcia", "mariagarcia@gmail.com");
-        System.out.println(socios);
+        System.out.println(socioRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(socios);
+    System.out.println(socioRepository.buscarTodos());
     System.out.println("\n");
 
     System.out.println("-------------------------------------------------------------------------");
     System.out.println("VERIFICACION DE FUNCIONES DE PRESTAMOS");
     System.out.println("\n");
 
-    //Crear lista de prestamos
-    List<Prestamo> prestamos = new ArrayList<>();
+    //Crear repositorio de prestamos
+    PrestamoRepository prestamoRepository = new PrestamoRepository();
 
     //Intanciar service de prestamos
-    PrestamoService prestamoService = new PrestamoService(prestamos,socios,recursos);
+    PrestamoService prestamoService = new PrestamoService(prestamoRepository,socioRepository,recursoRepository);
 
     //Creacion de prestamo
     System.out.println("CREAR PRESTAMO:");
     System.out.println("Stock libro1 antes: "+libro1.getStock());
     try {prestamoService.nuevoPrestamo("978-84-12345-67-2", 1, LocalDate.of(2026, 4, 29));
-        System.out.println(prestamos);
+        System.out.println(prestamoRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -198,7 +201,7 @@ public class Main {public static void main(String[] args) {
     //Creacion de prestamo con socio inexistente
     System.out.println("CREAR PRESTAMO CON SOCIO INEXISTENTE:");
     try {prestamoService.nuevoPrestamo("978-84-12345-67-2", 6, LocalDate.of(2026, 4, 29));
-        System.out.println(prestamos);
+        System.out.println(prestamoRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -207,7 +210,7 @@ public class Main {public static void main(String[] args) {
     //Creacion de prestamo con libro sin stock
     System.out.println("CREAR PRESTAMO CON LIBRO SIN STOCK:");
     try {prestamoService.nuevoPrestamo("978-0-545-01022-1", 1, LocalDate.of(2026, 4, 29));
-        System.out.println(prestamos);
+        System.out.println(prestamoRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -223,19 +226,19 @@ public class Main {public static void main(String[] args) {
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(prestamos);
+    System.out.println(prestamoRepository.buscarTodos());
     try {prestamoService.nuevoPrestamo("978-950-49-7243-3", 1, LocalDate.of(2026, 4, 29));
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(prestamos);
+    System.out.println(prestamoRepository.buscarTodos());
     System.out.println("\n");
 
     //Registrar una entrega a tiempo
     System.out.println("REGISTAR UNA ENTREGA A TIEMPO:");
     System.out.println("Stock libro1 antes: "+libro1.getStock());
     try {prestamoService.registarEntrega(1);
-        System.out.println(prestamos);
+        System.out.println(prestamoRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
@@ -246,7 +249,7 @@ public class Main {public static void main(String[] args) {
     //Registrar una con retraso
     System.out.println("REGISTAR UNA ENTREGA CON RETRASO:");
     try {prestamoService.registarEntrega(2);
-        System.out.println(prestamos);
+        System.out.println(prestamoRepository.buscarTodos());
     } catch (BibliotechException e){
         System.out.println(e.getMessage());
     }
