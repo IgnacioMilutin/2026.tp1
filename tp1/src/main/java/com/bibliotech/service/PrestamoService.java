@@ -10,6 +10,7 @@ import com.bibliotech.model.LibroFisico;
 import com.bibliotech.model.Prestamo;
 import com.bibliotech.model.Recurso;
 import com.bibliotech.model.Socio;
+import com.bibliotech.repository.Repository;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -17,16 +18,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class PrestamoService {
-    private List<Prestamo> prestamos;
-    private List<Socio> socios;
-    private List<Recurso> recursos;
+    private Repository<Prestamo, Integer> prestamoRepository;
+    private Repository<Socio, Integer> socioRepository;
+    private Repository<Recurso, String> recursoRepository;
     private int contadorId = 1;
 
     //constructor
-    public PrestamoService(List<Prestamo> prestamos,List<Socio> socios, List<Recurso> recursos) {
-        this.prestamos = prestamos;
-        this.socios = socios;
-        this.recursos = recursos;
+    public PrestamoService(Repository<Prestamo,Integer> prestamoRepository,Repository<Socio,Integer> socioRepository, Repository<Recurso, String> recursoRepository) {
+        this.prestamoRepository = prestamoRepository;
+        this.socioRepository = socioRepository;
+        this.recursoRepository = recursoRepository;
     }
 
     //metodo para crear un prestamo
@@ -38,7 +39,7 @@ public class PrestamoService {
         LocalDate fechaInicio = LocalDate.now();
 
         //validacion de idSocio y limite de prestamos
-        Optional<Socio> socioEncontrado = socios.stream()
+        Optional<Socio> socioEncontrado = socioRepository.buscarTodos().stream()
                 .filter(socio -> socio.idSocio() == idSocio)
                 .findFirst();
 
@@ -47,7 +48,7 @@ public class PrestamoService {
             throw new UsuarioInexistenteException(idSocio);
         }
 
-        long prestamosEncontrados = prestamos.stream()
+        long prestamosEncontrados = prestamoRepository.buscarTodos().stream()
                 .filter(prestamo -> prestamo.getIdSocio() == idSocio)
                 .filter(prestamo -> prestamo.getEstado()== Prestamo.estadoPrestamo.ACTIVO).count();
 
@@ -56,7 +57,7 @@ public class PrestamoService {
         }
 
         //validacion stock de libro
-        Optional<Recurso> recursoEncontrado = recursos.stream()
+        Optional<Recurso> recursoEncontrado = recursoRepository.buscarTodos().stream()
                 .filter(recurso -> recurso.isbn().equals(isbn))
                 .findFirst();
 
@@ -75,7 +76,7 @@ public class PrestamoService {
             ((LibroFisico) recursoEncontrado.get()).decrementarStock(1);
         }
 
-        prestamos.add(prestamo);
+        prestamoRepository.guardar(prestamo);
 
         contadorId+=1;
     }
@@ -84,7 +85,7 @@ public class PrestamoService {
     public void registarEntrega(int idPrestamo) throws PrestamoNoEncontradoException, PrestamoEntregaAtrasadaException, RecursoNoEncontradoException {
 
         //encontrar prestamo
-        Optional<Prestamo> prestamoEncontrado = prestamos.stream()
+        Optional<Prestamo> prestamoEncontrado = prestamoRepository.buscarTodos().stream()
                 .filter(prestamo -> prestamo.getIdPrestamo() == idPrestamo)
                 .findFirst();
 
@@ -99,7 +100,7 @@ public class PrestamoService {
         prestamoEncontrado.get().setFechaDevolucion();
 
         //aumentar stock de libro fisico al devolverlo
-        Optional<Recurso> recursoEncontrado = recursos.stream()
+        Optional<Recurso> recursoEncontrado = recursoRepository.buscarTodos().stream()
                 .filter(recurso -> recurso.isbn().equals(prestamoEncontrado.get().getIsbn()))
                 .findFirst();
 

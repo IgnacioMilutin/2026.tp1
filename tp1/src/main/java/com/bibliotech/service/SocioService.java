@@ -6,16 +6,15 @@ import com.bibliotech.exception.DniDuplicadoException;
 import com.bibliotech.model.Docente;
 import com.bibliotech.model.Estudiante;
 import com.bibliotech.model.Socio;
-
-import java.util.List;
+import com.bibliotech.repository.Repository;
 
 public class SocioService {
-    private List<Socio> socios;
+    private Repository<Socio, Integer> socioRepository;
     private int contadorId = 1;
 
     //constructor
-    public SocioService(List<Socio> socios) {
-        this.socios = socios;
+    public SocioService(Repository<Socio,Integer> socioRepository) {
+        this.socioRepository = socioRepository;
     }
 
     //metodo para crear socio con validaciones
@@ -26,7 +25,7 @@ public class SocioService {
         String tipoLower = tipo.toLowerCase();
 
         //validacion dni unico
-        if (socios.stream().anyMatch(socio -> socio.dni().equals(dni))){
+        if (socioRepository.buscarTodos().stream().anyMatch(socio -> socio.dni().equals(dni))){
             throw new DniDuplicadoException(dni);
         }
 
@@ -37,10 +36,10 @@ public class SocioService {
 
         if (tipoLower.equals("docente")){
             Docente docente = new Docente(id,dni,nombre,email);
-            socios.add(docente);
+            socioRepository.guardar(docente);
         } else if (tipoLower.equals("estudiante")) {
             Estudiante estudiante = new Estudiante(id,dni,nombre,email);
-            socios.add(estudiante);
+            socioRepository.guardar(estudiante);
         } else {
             throw new TipoSocioInexistenteException(tipo);
         }
